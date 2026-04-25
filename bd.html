@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подготовка БД для админ-панели – Лабораторная работа №6</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .code-block {
+            background: #f0ede8;
+            font-family: 'Courier New', monospace;
+            padding: 12px 18px;
+            border-radius: 18px;
+            border-left: 5px solid #9ac2b8;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .note {
+            background: #fef7e0;
+            padding: 10px 15px;
+            border-radius: 16px;
+            border-left: 4px solid #e8b86b;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Подготовка базы данных для администратора</h1>
+        <p class="subtitle">Создание таблицы `admin`, генерация хеша пароля и вставка учётной записи</p>
+    </header>
+
+    <section class="task">
+        <h2>1. Создание таблицы `admin`</h2>
+        <div class="desc">
+            <p>Для работы административной панели необходима отдельная таблица, хранящая логин и хеш пароля администратора.<br>
+            Таблица создаётся следующей SQL-командой:</p>
+        </div>
+        <div class="command">
+            <pre>CREATE TABLE IF NOT EXISTS admin (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL
+);</pre>
+        </div>
+        <div class="screenshot">
+            <img src="bd1.png" alt="Создание таблицы admin">
+            <div class="caption">Скриншот: создание таблицы admin</div>
+        </div>
+        <div class="desc">
+            <p>Поле <code>login</code> – уникальное имя администратора.<br>
+            <code>password_hash</code> – хранит хеш пароля, полученный через <code>password_hash()</code>.</p>
+        </div>
+    </section>
+
+    <section class="task">
+        <h2>2. Генерация хеша пароля</h2>
+        <div class="desc">
+            <p>Пароль администратора никогда не хранится в открытом виде. Для его безопасного хранения используется хеширование. Создадим временный PHP-файл для генерации хеша:</p>
+        </div>
+        <div class="code-block">
+            <code>&lt;?php<br>echo password_hash('admin123', PASSWORD_DEFAULT);<br>?&gt;</code>
+        </div>
+        <div class="desc">
+            <p>При запуске этого скрипта на сервере (например, <code>hash.php</code>) в браузере отобразится строка вида:</p>
+            <pre style="background:#f6f3fc;padding:8px;border-radius:12px;">$2y$10$t81LapeYbpBUIrRPNoNOM.eZtZEldrp9LqpbFbln2z/.AarBRNNd.</pre>
+            <p>Этот хеш будет использован при вставке записи администратора.</p>
+        </div>
+        <div class="screenshot">
+            <img src="hash.png" alt="Вывод хеша пароля">
+            <div class="caption">Скриншот: результат работы hash.php (хеш пароля admin123)</div>
+        </div>
+    </section>
+
+    <section class="task">
+        <h2>3. Добавление администратора в таблицу</h2>
+        <div class="desc">
+            <p>После получения хеша вставляем запись в таблицу <code>admin</code>. Используется <code>INSERT</code> для вставки.</p>
+        </div>
+        <div class="command">
+            <pre>INSERT INTO admin (login, password_hash)
+VALUES ('admin', '$2y$10$t81LapeYbpBUIrRPNoNOM.eZtZEldrp9LqpbFbln2z/.AarBRNNd.');</pre>
+        </div>
+        <div class="note">
+            <p>💡 Если администратор уже был добавлен, можно обновить запись:</p>
+            <pre style="background:#f6f3fc;margin-top:6px;">UPDATE admin SET password_hash = '$2y$10$...' WHERE login = 'admin';</pre>
+        </div>
+        <div class="screenshot">
+            <img src="bd2.png" alt="Вставка администратора">
+            <div class="caption">Скриншот: вставка записи admin </div>
+        </div>
+    </section>
+
+    <section class="task">
+        <h2>4. Проверка работоспособности</h2>
+        <div class="desc">
+            <p>После выполнения указанных шагов администратор может войти в панель (<code>admin.php</code>) с логином <code>admin</code> и паролем <code>admin123</code>. HTTP-авторизация сравнит введённый пароль с хешем из базы данных через <code>password_verify()</code>.</p>
+           
+        </div>
+    </section>
+
+    <div class="back-link">
+        <a href="admin.php">🔧 Перейти в админ-панель</a>
+        <a href="index.php">← Вернуться к главной форме</a>
+    </div>
+
+    
+</div>
+</body>
+</html>
