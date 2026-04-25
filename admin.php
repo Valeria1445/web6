@@ -449,7 +449,7 @@ $all_langs = $pdo->query("SELECT name FROM language ORDER BY name")->fetchAll(PD
     <!-- СТАТИСТИКА -->
     <h2>Статистика по языкам программирования</h2>
     <div class="table-responsive">
-        <table class="stats-table">
+        <table class="admin-table">
             <thead><tr><th>Язык</th><th>Количество пользователей</th></tr></thead>
             <tbody>
             <?php foreach ($stats as $s): ?>
