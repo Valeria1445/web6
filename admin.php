@@ -268,6 +268,7 @@ $all_langs = $pdo->query("SELECT name FROM language ORDER BY name")->fetchAll(PD
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель — Задание 6</title>
     <link rel="stylesheet" href="style.css">
+ 
     <style>
         .error-field {
             border: 2px solid #c97e5a !important;
@@ -290,6 +291,16 @@ $all_langs = $pdo->query("SELECT name FROM language ORDER BY name")->fetchAll(PD
             color: #6f5b8e;
             text-decoration: none;
         }
+
+        .table-responsive {
+        text-align: center;
+    }
+    .admin-table, .stats-table {
+        display: inline-block;
+        width: auto;
+        min-width: 80%;
+        margin: 0 auto;
+    }
     </style>
 </head>
 <body>
