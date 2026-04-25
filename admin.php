@@ -295,10 +295,16 @@ $all_langs = $pdo->query("SELECT name FROM language ORDER BY name")->fetchAll(PD
         .table-responsive {
         text-align: center;
     }
-    .admin-table, .stats-table {
+    .admin-table {
         display: inline-block;
         width: auto;
         min-width: 80%;
+        margin: 0 auto;
+    }
+    .stats-table{
+        display: inline-block;
+        width: auto;
+        max-width: 50%;
         margin: 0 auto;
     }
     </style>
@@ -449,7 +455,7 @@ $all_langs = $pdo->query("SELECT name FROM language ORDER BY name")->fetchAll(PD
     <!-- СТАТИСТИКА -->
     <h2>Статистика по языкам программирования</h2>
     <div class="table-responsive">
-        <table class="admin-table">
+        <table class="stats-table">
             <thead><tr><th>Язык</th><th>Количество пользователей</th></tr></thead>
             <tbody>
             <?php foreach ($stats as $s): ?>
